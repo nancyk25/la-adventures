@@ -24,7 +24,11 @@ class AdventuresController < ApplicationController
   # POST /adventures
   # POST /adventures.json
   def create
-    @adventure = Adventure.new(adventure_params)
+    
+    @adventure = Adventure.new(adventure_params.except("picture_url"))
+    if adventure_params["picture_url"]
+      @adventure.remote_picture_url = adventure_params["picture_url"]
+    end
 
     respond_to do |format|
       if @adventure.save
@@ -69,6 +73,6 @@ class AdventuresController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def adventure_params
-      params.require(:adventure).permit(:name, :description, :picture, :location, :visit)
+      params.require(:adventure).permit(:name, :description, :picture, :location, :visit, :picture_url)
     end
 end
