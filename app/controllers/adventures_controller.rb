@@ -26,6 +26,7 @@ class AdventuresController < ApplicationController
   def create
     
     @adventure = Adventure.new(adventure_params.except("picture_url"))
+    binding.pry
     if adventure_params["picture_url"]
       @adventure.remote_picture_url = adventure_params["picture_url"]
     end
@@ -45,6 +46,7 @@ class AdventuresController < ApplicationController
   # PATCH/PUT /adventures/1.json
   def update
     respond_to do |format|
+
       if @adventure.update(adventure_params)
         format.html { redirect_to @adventure, notice: 'Adventure was successfully updated.' }
         format.json { render :show, status: :ok, location: @adventure }
@@ -73,6 +75,6 @@ class AdventuresController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def adventure_params
-      params.require(:adventure).permit(:name, :description, :picture, :location, :visit, :picture_url)
+      params.require(:adventure).permit(:name, :description, :picture, :location, :visit, :remote_picture_url)
     end
 end
