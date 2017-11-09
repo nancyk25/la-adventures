@@ -26,7 +26,6 @@ class AdventuresController < ApplicationController
   def create
     
     @adventure = Adventure.new(adventure_params.except("picture_url"))
-    binding.pry
     if adventure_params["picture_url"]
       @adventure.remote_picture_url = adventure_params["picture_url"]
     end
@@ -46,16 +45,21 @@ class AdventuresController < ApplicationController
   # PATCH/PUT /adventures/1.json
   def update
     respond_to do |format|
+       if adventure_params["remote_picture_url"]
+          @adventure.remote_picture_url = adventure_params["remote_picture_url"]
+       end
 
-      if @adventure.update(adventure_params)
-        format.html { redirect_to @adventure, notice: 'Adventure was successfully updated.' }
-        format.json { render :show, status: :ok, location: @adventure }
-      else
-        format.html { render :edit }
-        format.json { render json: @adventure.errors, status: :unprocessable_entity }
+       if @adventure.update(adventure_params.except("remote_picture_url"))
+
+          format.html { redirect_to @adventure, notice: 'Adventure was successfully updated.' }
+          format.json { render :show, status: :ok, location: @adventure }
+        else
+          format.html { render :edit }
+          format.json { render json: @adventure.errors, status: :unprocessable_entity }
+        end
       end
     end
-  end
+
 
   # DELETE /adventures/1
   # DELETE /adventures/1.json
